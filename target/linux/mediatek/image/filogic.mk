@@ -1513,6 +1513,7 @@ endef
 TARGET_DEVICES += netcore_n60
 
 define Device/netcore_n60-pro
+  IMAGE_SIZE := 507904k # maximum size = 490MB. added to support 512MB flash
   DEVICE_VENDOR := Netcore
   DEVICE_MODEL := N60 Pro
   DEVICE_DTS := mt7986a-netcore-n60-pro
