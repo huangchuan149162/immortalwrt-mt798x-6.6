@@ -295,7 +295,8 @@
 
 			partition@580000 {
 				label = "ubi";
-				reg = <0x0580000 0x7280000>;
+//				reg = <0x0580000 0x7280000>;  // for original n60pro with 128MB flash
+				reg = <0x0580000 0x1ea00000>; // for modified n60pro with 512MB flash
 			};
 		};
 	};
