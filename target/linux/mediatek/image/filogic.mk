@@ -645,6 +645,20 @@ define Device/cmcc_rax3000m
 endef
 TARGET_DEVICES += cmcc_rax3000m
 
+define Device/cmcc_rax3000m-stock
+  DEVICE_VENDOR := CMCC
+  DEVICE_MODEL := RAX3000M NAND
+  DEVICE_VARIANT := (H layout)
+  DEVICE_DTS := mt7981b-cmcc-rax3000m-stock
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_PACKAGES := kmod-usb3 f2fsck mkf2fs
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  IMAGE_SIZE := 116736k
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += cmcc_rax3000m-stock
+
 define Device/cmcc_rax3000me
   DEVICE_VENDOR := CMCC
   DEVICE_MODEL := RAX3000Me
@@ -659,6 +673,44 @@ define Device/cmcc_rax3000me
   ARTIFACT/nand-ddr4-bl31-uboot.fip := mt7981-bl31-uboot cmcc_rax3000me-nand-ddr4
 endef
 TARGET_DEVICES += cmcc_rax3000me
+
+define Device/cmcc_xr30-nand
+  DEVICE_VENDOR := CMCC
+  DEVICE_MODEL := XR30 NAND
+  DEVICE_VARIANT := (U-Boot mod)
+  DEVICE_DTS := mt7981b-cmcc-xr30-nand
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware kmod-usb3
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  IMAGE_SIZE := 116736k
+  KERNEL_IN_UBI := 1
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += cmcc_xr30-nand
+
+define Device/cmcc_xr30-stock
+  DEVICE_VENDOR := CMCC
+  DEVICE_MODEL := XR30 NAND
+  DEVICE_VARIANT := (H layout)
+  DEVICE_DTS := mt7981b-cmcc-xr30-stock
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware kmod-usb3 \
+	automount f2fsck mkf2fs
+  SUPPORTED_DEVICES := cmcc,xr30
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  IMAGE_SIZE := 116736k
+  KERNEL_IN_UBI := 1
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += cmcc_xr30-stock
 
 define Device/comfast_cf-e393ax
   DEVICE_VENDOR := COMFAST
@@ -1009,6 +1061,20 @@ define Device/glinet_gl-xe3000
 endef
 TARGET_DEVICES += glinet_gl-xe3000
 
+define Device/openfi_6c
+  DEVICE_VENDOR := OpenFi
+  DEVICE_MODEL := 6C (with 256MB+1GB+M.2 for 5G+U3)
+  DEVICE_DTS := mt7981b-openfi-6c
+  DEVICE_DTS_DIR := ../dts
+  SUPPORTED_DEVICES += openfi,6c
+  DEVICE_PACKAGES := automount  kmod-hwmon-pwmfan kmod-usb-net-rndis kmod-usb-serial-option f2fsck losetup mkf2fs kmod-fs-f2fs kmod-mmc luci-app-openfi 
+  KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
+  KERNEL_INITRAMFS := kernel-bin | lzma | \
+        fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += openfi_6c
+
 define Device/h3c_magic-nx30-pro
   DEVICE_VENDOR := H3C
   DEVICE_MODEL := Magic NX30 Pro
@@ -1075,7 +1141,7 @@ define Device/Airpi
   DEVICE_MODEL := emmc
   DEVICE_DTS := mt7981b-Airpi-emmc16G
   DEVICE_DTS_DIR := ../dts
-  DEVICE_PACKAGES := kmod-usb-net-cdc-mbim kmod-usb-net-qmi-wwan \
+  DEVICE_PACKAGES := kmod-usb-net-cdc-mbim  kmod-hwmon-pwmfan kmod-usb-net-qmi-wwan \
 		     kmod-usb-serial-option kmod-usb3 automount kmod-Airpi-gpio-fan \
  		f2fsck mkf2fs uqmi luci-app-Airpifanctrl
   KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
@@ -1273,6 +1339,24 @@ define Device/livinet_zr-3020-ubootmod
   DEVICE_COMPAT_MESSAGE := Flash layout changes require bootloader update
 endef
 TARGET_DEVICES += livinet_zr-3020-ubootmod
+
+define Device/mediatek_7981r128
+  DEVICE_VENDOR := MediaTek
+  DEVICE_MODEL := 7981r128
+  DEVICE_DTS := mt7981b-mediatek-7981r128
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware
+  SUPPORTED_DEVICES += mediatek,7981r128
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  IMAGE_SIZE := 114688k
+  KERNEL_IN_UBI := 1
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += mediatek_7981r128
 
 define Device/mediatek_mt7981-rfb
   DEVICE_VENDOR := MediaTek
@@ -1829,6 +1913,19 @@ define Device/ubnt_unifi-6-plus
 endef
 TARGET_DEVICES += ubnt_unifi-6-plus
 
+define Device/umi_uax3000e
+  DEVICE_VENDOR := UMI
+  DEVICE_MODEL := UAX3000E
+  DEVICE_DTS := mt7981b-umi-uax3000e
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware automount coremark blkid blockdev fdisk f2fsck mkf2fs kmod-mmc mmc-utils
+  KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
+  KERNEL_INITRAMFS := kernel-bin | lzma | \
+	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += umi_uax3000e
+
 define Device/unielec_u7981-01
   DEVICE_VENDOR := Unielec
   DEVICE_MODEL := U7981-01
@@ -2142,3 +2239,68 @@ define Device/zyxel_nwa50ax-pro
   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
 endef
 TARGET_DEVICES += zyxel_nwa50ax-pro
+
+define Device/wirelesstag_zx7981pg
+  DEVICE_VENDOR := Wireless-Tag
+  DEVICE_MODEL := ZX7981PG
+  DEVICE_DTS := mt7981b-wirelesstag-zx7981pg
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware kmod-usb3 mt7981-wo-firmware
+  DEVICE_DTS_LOADADDR := 0x44000000
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  IMAGE_SIZE := 51200k
+  KERNEL_IN_UBI := 1
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += wirelesstag_zx7981pg
+
+define Device/wirelesstag_zx7981pd
+  DEVICE_VENDOR := Wireless-Tag
+  DEVICE_MODEL := ZX7981PD
+  DEVICE_DTS := mt7981b-wirelesstag-zx7981pd
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware kmod-usb3 mt7981-wo-firmware
+  DEVICE_DTS_LOADADDR := 0x44000000
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  IMAGE_SIZE := 51200k
+  KERNEL_IN_UBI := 1
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += wirelesstag_zx7981pd
+
+define Device/wirelesstag_zx7981pd-ubootmod
+  DEVICE_VENDOR := Wireless-Tag
+  DEVICE_MODEL := ZX7981PD
+  DEVICE_VARIANT := (OpenWrt U-Boot layout)
+  DEVICE_DTS := mt7981b-wirelesstag-zx7981pd-ubootmod
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware kmod-usb3
+  KERNEL_INITRAMFS_SUFFIX := -recovery.itb
+  IMAGES := sysupgrade.itb
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  KERNEL_IN_UBI := 1
+  UBOOTENV_IN_UBI := 1
+  KERNEL := kernel-bin | lzma
+  KERNEL_INITRAMFS := kernel-bin | lzma | \
+        fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
+  IMAGE/sysupgrade.itb := append-kernel | \
+        fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb external-static-with-rootfs | append-metadata
+  ARTIFACTS := preloader.bin bl31-uboot.fip
+  ARTIFACT/preloader.bin := mt7981-bl2 spim-nand-ddr3
+  ARTIFACT/bl31-uboot.fip := mt7981-bl31-uboot wirelesstag_zx7981pd
+ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
+  ARTIFACTS += initramfs-factory.ubi
+  ARTIFACT/initramfs-factory.ubi := append-image-stage initramfs-recovery.itb | ubinize-kernel
+endif
+endef
+TARGET_DEVICES += wirelesstag_zx7981pd-ubootmod

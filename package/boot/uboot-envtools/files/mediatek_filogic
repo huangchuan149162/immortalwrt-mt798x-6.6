@@ -39,6 +39,7 @@ cmcc,a10-ubootmod|\
 h3c,magic-nx30-pro|\
 imou,lc-hx3001|\
 jcg,q30-pro|\
+mediatek,7981r128|\
 livinet,zr-3020-ubootmod|\
 mercusys,mr90x-v1-ubi|\
 netcore,n60|\
@@ -64,6 +65,7 @@ glinet,gl-mt6000|\
 glinet,gl-x3000|\
 glinet,gl-xe3000|\
 sl,3000-emmc|\
+umi,uax3000e|\
 huasifei,wh3000-emmc)
 	local envdev=$(find_mmc_part "u-boot-env")
 	ubootenv_add_uci_config "$envdev" "0x0" "0x80000"

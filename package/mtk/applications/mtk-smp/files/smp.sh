@@ -745,6 +745,7 @@ setup_model()
 		MT7986_whnat $num_of_wifi $usbnet
 		;;
 	*mt3000* |\
+	*wirelesstag* |\
 	glinet,x3000-emmc |\
 	*xe3000* |\
 	*cudy* |\
@@ -762,6 +763,7 @@ setup_model()
 	konka,komi-a31 |\
 	*nokia,ea0326gmp* |\
 	nradio,wt9103 |\
+ 	Airpi* |\
 	*7981*)
 		MT7981_whnat $num_of_wifi $usbnet
 		;;
@@ -844,6 +846,16 @@ set_rps_cpus()
 		fi
 	done
 }
+# Improve SW path peak throughput by disabling the GRO fraglist feature.
+disable_gro_fraglist()
+{
+	for iface in /sys/class/net/*; do
+		iface=$(basename "$iface")
+		if ethtool -k "$iface" | grep -q "rx-gro-list"; then
+			ethtool -K "$iface" rx-gro-list off
+		fi
+	done
+}
 
 set_smp_affinity()
 {
@@ -904,4 +916,5 @@ setup_model
 set_rps_cpu_bitmap
 set_rps_cpus $DEFAULT_RPS
 set_smp_affinity
+disable_gro_fraglist
 #end of file

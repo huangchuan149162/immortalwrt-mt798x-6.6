@@ -11,6 +11,7 @@ mediatek_setup_interfaces()
 	abt,asr3000|\
 	cmcc,rax3000m*|\
 	cmcc,rax3000me|\
+	cmcc,xr30*|\
 	h3c,magic-nx30-pro|\
 	h3c,magic-nx30-pro-nmbm|\
 	imou,lc-hx3001|\
@@ -19,6 +20,7 @@ mediatek_setup_interfaces()
 	nokia,ea0326gmp|\
 	mercusys,mr80x-v3|\
 	routerich,ax3000-v1|\
+	umi,uax3000e|\
 	zbtlink,zbt-z8103ax)
 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" eth1
 		;;
@@ -37,8 +39,8 @@ mediatek_setup_interfaces()
 		;;
 	huasifei,wh3000-pro|\
 	*Airpi*)
-                ucidef_set_interfaces_lan_wan "eth1.1234 eth0 eth1" eth2
-                ;;
+                ucidef_set_interfaces_lan "eth0 eth1"
+		;;
 	asus,rt-ax52|\
 	asus,rt-ax59u|\
 	cetron,ct3003|\
@@ -109,8 +111,9 @@ mediatek_setup_interfaces()
 	glinet,gl-x3000|\
 	glinet,gl-xe3000|\
 	openembed,som7981|\
-	openwrt,one)
-		ucidef_set_interfaces_lan_wan "eth1 eth1.1234" eth0
+	openwrt,one|\
+	openfi,6c*)
+		ucidef_set_interfaces_lan_wan "eth1" eth0
 		;;
 	dlink,aquila-pro-ai-m30-a1|\
 	dlink,aquila-pro-ai-m60-a1)
@@ -136,12 +139,20 @@ mediatek_setup_interfaces()
 	mercusys,mr90x-v1-ubi)
 		ucidef_set_interfaces_lan_wan "lan0 lan1 lan2" eth1
 		;;
+	mediatek,7981r128|\
 	tplink,tl-xdr6086|\
 	wavlink,wl-wn586x3)
 		ucidef_set_interfaces_lan_wan "lan1 lan2" eth1
 		;;
 	tplink,re6000xd)
 		ucidef_set_interface_lan "lan1 lan2 eth1"
+		;;
+	wirelesstag,zx7981pd|\
+	wirelesstag,zx7981pd-ubootmod)
+		ucidef_set_interfaces_lan_wan "lan1 lan2" wan
+		;;
+	wirelesstag,zx7981pg)
+		ucidef_set_interfaces_lan_wan "lan1 lan2" wan
 		;;
 	xiaomi,mi-router-ax3000t|\
 	xiaomi,mi-router-ax3000t-ubootmod|\
@@ -152,7 +163,7 @@ mediatek_setup_interfaces()
 		ucidef_set_interfaces_lan_wan "lan2 lan3 lan4" wan
 		;;
 	yvr,x6)
-		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" eth0
+		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3" wan
 		;;
 	*)
 		ucidef_set_interfaces_lan_wan "lan1 lan2 lan3 lan4" wan
@@ -233,15 +244,33 @@ mediatek_setup_macs()
 		wan_mac=$(mtd_get_mac_ascii Bdata ethaddr_wan)
 		label_mac=$wan_mac
 		;;
+	umi,uax3000e)
+		lan_mac=$(mmc_get_mac_binary factory 0x2A)
+		wan_mac=$(mmc_get_mac_binary factory 0x04)
+		;;
 	yuncore,ax835)
 		label_mac=$(mtd_get_mac_binary "Factory" 0x4)
 		;;
+	openfi,6c*)
+		lan_mac=$(macaddr_add $(cat /sys/class/net/eth1/address) 1)
+		;;
+	wirelesstag,zx7981pd|\
+	wirelesstag,zx7981pd-ubootmod)
+		label_mac=$(mtd_get_mac_binary wtinfo 10)
+		lan_mac=$label_mac
+		wan_mac=$(macaddr_add "$label_mac" 1)
+		;;
+	mediatek,7981r128)
+		local label_mac=$(mtd_get_mac_binary Factory 0x4)
+		lan_mac=$(macaddr_add $label_mac 1)
+		wan_mac=$(macaddr_add $label_mac -1)
+		;;
 	esac
 		
-	wifi_mac="$(macaddr_add $lan_mac 1)"
+	wifi_mac=$(macaddr_add $(cat /sys/class/net/eth0/address) 3)
         sed -i '/MacAddress=$wifi_mac/d' /etc/wireless/mediatek/mt7981.dbdc.b0.dat
         echo "MacAddress=$wifi_mac" >> /etc/wireless/mediatek/mt7981.dbdc.b0.dat
-        wifi_mac="$(macaddr_add $lan_mac 2)"
+        wifi_mac=$(macaddr_add $(cat /sys/class/net/eth0/address) 4)
         sed -i '/MacAddress=$wifi_mac/d' /etc/wireless/mediatek/mt7981.dbdc.b1.dat
         echo "MacAddress=$wifi_mac" >> /etc/wireless/mediatek/mt7981.dbdc.b1.dat
 	sed -i '/MacAddress=$wifi_mac/d' /etc/wireless/mediatek/mt7986-ax60000.dbdc.b0.dat

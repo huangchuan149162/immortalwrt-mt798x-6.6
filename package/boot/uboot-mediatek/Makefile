@@ -447,6 +447,18 @@ define U-Boot/mt7981_netis_nx31
   DEPENDS:=+trusted-firmware-a-mt7981-spim-nand-ddr3
 endef
 
+define U-Boot/mt7981_mediatek_7981r128
+  NAME:=Mediatek 7981R128
+  BUILD_SUBTARGET:=filogic
+  BUILD_DEVICES:=mediatek_7981r128
+  UBOOT_CONFIG:=mt7981_mediatek_7981r128
+  UBOOT_IMAGE:=u-boot.fip
+  BL2_BOOTDEV:=spim-nand
+  BL2_SOC:=mt7981
+  BL2_DDRTYPE:=ddr3
+  DEPENDS:=+trusted-firmware-a-mt7981-spim-nand-ddr3
+endef
+
 define U-Boot/mt7981_nokia_ea0326gmp
   NAME:=Nokia EA0326GMP
   BUILD_SUBTARGET:=filogic
@@ -574,6 +586,18 @@ define U-Boot/mt7981_qihoo_360t7
   BUILD_SUBTARGET:=filogic
   BUILD_DEVICES:=qihoo_360t7
   UBOOT_CONFIG:=mt7981_qihoo-360t7
+  UBOOT_IMAGE:=u-boot.fip
+  BL2_BOOTDEV:=spim-nand
+  BL2_SOC:=mt7981
+  BL2_DDRTYPE:=ddr3
+  DEPENDS:=+trusted-firmware-a-mt7981-spim-nand-ddr3
+endef
+
+define U-Boot/mt7981_wirelesstag_zx7981pd
+  NAME:=Wireless-Tag ZX7981PD
+  BUILD_SUBTARGET:=filogic
+  BUILD_DEVICES:=wirelesstag_zx7981pd-ubootmod
+  UBOOT_CONFIG:=mt7981_zx7981pd
   UBOOT_IMAGE:=u-boot.fip
   BL2_BOOTDEV:=spim-nand
   BL2_SOC:=mt7981
@@ -1002,6 +1026,7 @@ UBOOT_TARGETS := \
 	mt7981_h3c_magic-nx30-pro \
 	mt7981_imou_lc-hx3001 \
 	mt7981_jcg_q30-pro \
+  mt7981_mediatek_7981r128 \
 	mt7981_konka_komi-a31 \
 	mt7981_konka_komi-a31-emmc \
 	mt7981_konka_komi-a31-nor \
@@ -1019,6 +1044,7 @@ UBOOT_TARGETS := \
 	mt7981_qihoo_360t7 \
 	mt7981_xiaomi_mi-router-ax3000t \
 	mt7981_xiaomi_mi-router-wr30u \
+  mt7981_wirelesstag_zx7981pd \
 	mt7986_bananapi_bpi-r3-emmc \
 	mt7986_bananapi_bpi-r3-sdmmc \
 	mt7986_bananapi_bpi-r3-snand \
