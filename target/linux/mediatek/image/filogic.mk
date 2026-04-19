@@ -1694,13 +1694,16 @@ endef
 TARGET_DEVICES += netcore_n60
 
 define Device/netcore_n60-pro
-  IMAGE_SIZE := 507904k # maximum size = 490MB. added to support 512MB flash
+  IMAGE_SIZE := 512000k # maximum size = 500MB. added to support 512MB Koxia flash without NMBM
   DEVICE_VENDOR := Netcore
   DEVICE_MODEL := N60 Pro
   DEVICE_DTS := mt7986a-netcore-n60-pro
   DEVICE_DTS_DIR := ../dts
-  BLOCKSIZE := 128k
-  PAGESIZE := 2048
+#  BLOCKSIZE := 128k
+#  PAGESIZE := 2048
+#  for Koxia 512MB flash with block size of 256K
+  BLOCKSIZE := 256k
+  PAGESIZE := 4096
   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
   DEVICE_PACKAGES := kmod-mt7915e kmod-mt7986-firmware mt7986-wo-firmware kmod-usb3 automount
 endef
