@@ -240,9 +240,9 @@
 		spi-tx-bus-width = <4>;
 		spi-rx-bus-width = <4>;
 		
-	//	mediatek,nmbm;
-    //    	mediatek,bmt-max-ratio = <1>;
-    //    	mediatek,bmt-max-reserved-blocks = <64>;
+		mediatek,nmbm;
+        	mediatek,bmt-max-ratio = <1>;
+        	mediatek,bmt-max-reserved-blocks = <64>;
 
 		partitions {
 			compatible = "fixed-partitions";
@@ -252,7 +252,7 @@
 			partition@0 {
 				label = "bl2";
 				reg = <0x0 0x100000>;
-				read-only;
+				/*read-only;*/
 			};
 
 			partition@100000 {
@@ -290,14 +290,14 @@
 			partition@380000 {
 				label = "fip";
 				reg = <0x380000 0x200000>;
-				read-only;
+				/*read-only;*/
 			};
 
 			partition@580000 {
 				label = "ubi";
 //				reg = <0x0580000 0x7280000>;  // for original n60pro with 128MB flash
-//				reg = <0x0580000 0x1ea00000>; // for modified n60pro with 512MB flash and NMBM
-  				reg = <0x0580000 0x1F400000>; // for modified n60pro with 512MB flash and without NMBM
+				reg = <0x0580000 0x1ea00000>; // for modified n60pro with 512MB flash and NMBM
+//  				reg = <0x0580000 0x1F400000>; // for modified n60pro with 512MB flash and without NMBM
 			};
 		};
 	};
