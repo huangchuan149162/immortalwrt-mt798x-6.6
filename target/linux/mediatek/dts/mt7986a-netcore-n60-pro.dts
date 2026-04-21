@@ -252,7 +252,6 @@
 			partition@0 {
 				label = "bl2";
 				reg = <0x0 0x100000>;
-				/*read-only;*/
 			};
 
 			partition@100000 {
@@ -290,7 +289,6 @@
 			partition@380000 {
 				label = "fip";
 				reg = <0x380000 0x200000>;
-				/*read-only;*/
 			};
 
 			partition@580000 {
